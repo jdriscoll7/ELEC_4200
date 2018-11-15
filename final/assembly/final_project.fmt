@@ -1,0 +1,165 @@
+                       ; Format for seven-segment display definitions.
+                       ;
+                       ; [X] [X] [X] [X] [digit_3] [digit_2] [digit_1] [digit_0]
+                       ;
+                       ; Digit definitions - one-hot for activating digits of display.
+                       CONSTANT digit_3, 08
+                       CONSTANT digit_2, 04
+                       CONSTANT digit_1, 02
+                       CONSTANT digit_0, 01
+                       ;
+                       ;
+                       ; Scratchpad memory addresses used to hold the four hex values.
+                       CONSTANT stored_value_0, 00
+                       CONSTANT stored_value_1, 01
+                       CONSTANT stored_value_2, 02
+                       CONSTANT stored_value_3, 03
+                       ;
+                       ; Enable interrupts for the program to work.
+                       ENABLE INTERRUPT
+                       ;
+                       ;
+                 main: 
+                       ; Scroll ELEC 4200 character sequence.
+                       ;
+                       ;
+                       ;
+                       ;
+                       ; Display stored values.
+                       CALL display_stored_values
+                       JUMP main
+                       ;
+                       ;
+                       ;
+                       ;
+                       ;
+                       ;
+                       ;
+                       ;
+                       ;
+                       ; Function display_stored_values
+                       ;
+                       ; Displays four stored values on segments.
+                       ;
+                       ;
+                       CONSTANT digit_max, 08
+                       CONSTANT delay_multiplier, FF
+                       ;
+                       ;
+display_stored_values: 
+                       LOAD s1, 01                               ; Chooses which digit to display.
+                       LOAD s2, 00                               ; Register for counting.
+                       LOAD s3, 00                               ; Memory address of value to display.
+           delay_loop: 
+                       ; Set up registers s0 and s1 for putchar call.
+                       FETCH s0, (s3)
+                       CALL putchar
+                       COMPARE s1, digit_max
+                       SL0 s1
+                       ADD s3, 01
+                       JUMP NZ, delay_loop
+                       ; Increment loop count and reset digit to display.
+                       LOAD s1, 01
+                       LOAD s3, 00
+                       ADD s2, 01
+                       COMPARE s2, delay_multiplier
+                       JUMP NZ, delay_loop
+                       RETURN 
+                       ; Function putchar
+                       ;
+                       ;     - NOTE: Only handles characters 0-F and "C", "E", and "L".
+                       ;
+                       ;     - Input:
+                       ;         - s0: Character to print - is destroyed after function.
+                       ;         - s1: Display to print on.
+                       ;
+                       ;     - Uses s0 + s1 for input and s2 + s3 for table indexing.
+                       ;
+                       ;
+              putchar: 
+                       REGBANK B
+                       ; Determine if input is a number or a letter (see NOTE for supported characters).
+                       COMPARE s0, 15                            ; If input is greater than 15, then it is a character.
+                       JUMP C, is_number                         ; Jump to is_number label if input less than 15.
+                       ;
+                       ; Basically a switch statement to decode ASCII character - all supported characters are here.
+                       ;
+              C_check: 
+                       COMPARE s0, "C"                           ; Compare to C.
+                       JUMP NZ, E_check                          ; If it is not C, check for E.
+                       LOAD s0, 0C                               ; Set index for C in table.
+                       JUMP is_number                            ; Continue to is_number to index table.
+              E_check: 
+                       COMPARE s0, "E"
+                       JUMP NZ, L_check
+                       LOAD s0, 0E
+                       JUMP is_number
+              L_check: 
+                       LOAD s0, 10
+                       ;
+                       ;
+            is_number: 
+                       LOAD s2, putchar_decode'upper             ; Upper bound of table.
+                       LOAD s3, putchar_decode'lower             ; Lower bound of table.
+                       ADD s3, s0                                ; Index the table.
+                       ADDCY s2, 00                              ; Add carry from right half.
+                       CALL@ (s2, s3)                            ; Return hex value in s0.
+                       ;
+                       ; Writes seven segment pattern to display.
+                       ;
+                       OUTPUT s0, (s1)
+                       REGBANK A
+                       RETURN 
+                       ; Function putchar_decode
+                       ;
+                       ;    - Holds a table of seven-segment display values.
+                       ;
+                       ;    - Access elements in table with CALL@ (decode_table'upper, decode_table'lower + index).
+                       ;
+                       TABLE putchar_character_decode#, [40,79,24,30,19,12,02,78,00,10,08,03,44,21,06,0E,38]
+       putchar_decode: 
+                       ;
+                       LOAD&RETURN s0, putchar_character_decode#
+                       ;
+                       ; Interrupt service routine.
+                       ;
+                       ;     - Used to signal to the processor that
+                       ;       an SPI data transfer has taken place and
+                       ;       that data should be captured.
+                       ;
+                       ;     - Uses s0 and s1 for all operations.
+                       ;         - s0: Used for data input.
+                       ;         - s1: Holds masked address data.
+                       ;         - s2: Holds masked value data.
+                       ;
+                       ;
+                       ADDRESS F80                               ; Address of interrupt vector (in specifications).
+                       REGBANK B                                 ; Use different register bank for interrupt.
+                       ;
+                       ;
+                       ; Constants needed for ISR (input port number and data masks).
+                       CONSTANT input_port, 00
+                       CONSTANT digit_address_mask, 30
+                       CONSTANT digit_value_mask, 0F
+                       ;
+                       ;
+                       ;
+                  isr: ; Setup registers s1 and s2 and load input data into s0.
+                       INPUT s0, input_port                      ; Place input data into s0.
+                       LOAD s1, digit_address_mask               ; Load register s1 with address mask.
+                       LOAD s2, digit_value_mask                 ; Load register s2 with value mask.
+                       ;
+                       ; Actually perform the masking.
+                       AND s1, s0                                ; Extract address bits of input.
+                       AND s2, s0                                ; Extract value bits of input.
+                       ;
+                       ; Shift address bits of input so they are in least significant bits of register.
+                       SR0 s1
+                       SR0 s1
+                       SR0 s1
+                       SR0 s1
+                       ;
+                       ; Update stored value determined by address bits.
+                       STORE s2, (s1)
+                       REGBANK A                                 ; Change register bank back to user bank.
+                       RETURNI ENABLE                            ; Return from interrupt.
