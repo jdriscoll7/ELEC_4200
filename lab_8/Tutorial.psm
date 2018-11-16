@@ -1,0 +1,5 @@
+; Sample program - continuously copy input port 00 to output port 01
+
+INPUT s0,00
+OUTPUT s0,01
+JUMP 000

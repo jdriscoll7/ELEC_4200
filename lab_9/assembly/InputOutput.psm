@@ -1,0 +1,74 @@
+                ; Input and output port numbers.
+                CONSTANT switch_input,    00
+                CONSTANT button_input,    01
+                CONSTANT output_port_1,   02
+                CONSTANT output_port_2,   04
+                ;
+                ; Used to mask the value of the button on the input port.
+                CONSTANT button_bitmask,  01
+                ;
+                ; Turn is stored in s1. Keep constants for what value represents which turn.
+                CONSTANT first_turn,  01
+                CONSTANT second_turn, 02
+                ;
+                ;
+                ;
+                ;
+                ;
+                ; Reserve s1 as turn manager - initialize it to first turn.
+                LOAD s1, first_turn
+main_loop:      
+                ; Wait for button to be pressed.
+                INPUT s0, button_input
+                TEST s0, button_bitmask
+                JUMP Z, main_loop
+                ;
+                ;
+                ; Save value of switches to output port - turn is changed in subroutine.
+                CALL output_turn
+                ;
+                ;
+                ; Short delay for debouncing.
+                CALL short_delay
+                ;
+                ;
+                ; Wait for button to be released.
+button_release: INPUT s0, button_input
+                TEST s0, button_bitmask
+                JUMP NZ, button_release
+                ;
+                ;
+                ; Start main loop again.
+                JUMP main_loop
+                ;
+                ;
+                ;
+                ;
+                ;
+                ; Subroutine: output_turn
+                ;     - Outputs value of input switches to output port 1 or 2,
+                ;       depending on current turn.
+                ;
+output_turn:    INPUT s0, switch_input
+                TEST s1, first_turn
+                JUMP Z, output_turn_2
+output_turn_1:  OUTPUT s0, output_port_1
+                LOAD s1, second_turn
+                RETURN
+output_turn_2:  OUTPUT s0, output_port_2
+                LOAD s1, first_turn
+                RETURN
+                ;
+                ;
+                ;
+                ;
+                ; Subroutine: short_delay
+                ;     - Adds to a register so many time to simulate a short delay. This
+                ;       is used for debouncing the user push button.
+                CONSTANT delay_count_size, 64   ; Number of times the delay adds - currently 100.
+short_delay:    LOAD s0, 00
+delay_loop:     ADD s0, 01
+                COMPARE s0, delay_count_size
+                RETURN Z
+                JUMP delay_loop
+                 

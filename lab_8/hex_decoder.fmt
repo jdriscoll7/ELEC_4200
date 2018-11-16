@@ -1,0 +1,28 @@
+              ; Constants used for this program (input and output ports).
+              CONSTANT input_port, 00
+              CONSTANT output_port, 01
+   main_loop: LOAD s0, input_port               ; Input to function is input port.
+              CALL decode_hex                   ; Store proper cathode pattern to s0.
+              OUTPUT s0, output_port            ; Output to cathodes.
+              JUMP main_loop                    ; Repeat forever.
+              ;
+              ; Read in hex input from ports 00-03. Index used to
+              ; access seven_seg_decode array ends up in s1.
+              ;
+              ; Input port on s0.
+              ; Return value placed on s0.
+              ;
+  decode_hex: INPUT s0, (s0)                    ; Store port s1 in register 2.
+              ;
+              LOAD s1, decode_table'upper       ; Upper bound of table.
+              LOAD s2, decode_table'lower       ; Lower bound of table.
+              ADD s2, s0                        ; Index the table.
+              CALL@ (s1, s2)                    ; Return hex value in s0.
+              ;
+              RETURN                            ; Cathode write pattern is in s0.
+              ; Define array indexed by digit to be displayed with cathode pattern as value.
+              ;
+              ; Access elements in table with CALL@ (decode_table'upper, decode_table'lower + index).
+              ;
+              TABLE seven_seg_decode#, [40,79,24,30,19,12,02,78,00,10,08,03,44,21,06,0E]
+decode_table: LOAD&RETURN s0, seven_seg_decode#
