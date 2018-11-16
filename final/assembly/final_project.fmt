@@ -77,7 +77,6 @@ display_stored_values:
                        ;
                        ;
               putchar: 
-                       REGBANK B
                        ; Determine if input is a number or a letter (see NOTE for supported characters).
                        COMPARE s0, 15                            ; If input is greater than 15, then it is a character.
                        JUMP C, is_number                         ; Jump to is_number label if input less than 15.
@@ -108,7 +107,6 @@ display_stored_values:
                        ; Writes seven segment pattern to display.
                        ;
                        OUTPUT s0, (s1)
-                       REGBANK A
                        RETURN 
                        ; Function putchar_decode
                        ;
