@@ -31,7 +31,7 @@
                        ;     - Outputs each of the four stored hex values on LED's.
                        ;     - Register usage:
                        ;         - s0: stores which of stored values to display (0-3)
-                       ;         - s1: stores which port to write the digit to (digit_0 - digit_3)
+                       ;         - s1: stores which port to write the digit to
                        ;         - s2: stores the value stored in memory (changed by SPI)
                        ;         - s3 and s4: index the segment decode table
                        ;         - sF: holds seven segment display value
