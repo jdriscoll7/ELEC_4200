@@ -42,7 +42,7 @@
                        LOAD s0, 00
                        LOAD s1, 01
          display_loop:
-                       FETCH s2, s0                              ; Get value stored in memory.
+                       FETCH s2, (s0)                            ; Get value stored in memory.
                        LOAD s3, putchar_decode'upper             ; Upper bound of table.
                        LOAD s4, putchar_decode'lower             ; Lower bound of table.
                        ADD s4, s2                                ; Index the table.
