@@ -9,12 +9,6 @@
                        CONSTANT digit_0, 01
                        ;
                        ;
-                       ; Scratchpad memory addresses used to hold the four hex values.
-                       CONSTANT stored_value_0, 00
-                       CONSTANT stored_value_1, 01
-                       CONSTANT stored_value_2, 02
-                       CONSTANT stored_value_3, 03
-                       ;
                        ; Enable interrupts for the program to work.
                        ENABLE INTERRUPT
                        ;
@@ -34,16 +28,33 @@
                        ;
                        ; Function display_values
                        ;
-                       ;     Outputs each of the four stored hex values on LED's.
-       display_values:
-                       LOAD s2, putchar_decode'upper             ; Upper bound of table.
-                       LOAD s3, putchar_decode'lower             ; Lower bound of table.
-                       ADD s3, s0                                ; Index the table.
-                       ADDCY s2, 00                              ; Add carry from right half.
-                       CALL@ (s2, s3)                            ; Return hex value in s0.
+                       ;     - Outputs each of the four stored hex values on LED's.
+                       ;     - Register usage:
+                       ;         - s0: stores which of stored values to display (0-3)
+                       ;         - s1: stores which port to write the digit to (digit_0 - digit_3)
+                       ;         - s2: stores the value stored in memory (changed by SPI)
+                       ;         - s3 and s4: index the segment decode table
+                       ;         - sF: holds seven segment display value
                        ;
+                       ;
+                       ;
+       display_values:
+                       LOAD s0, 00
+                       LOAD s1, 01
+         display_loop:
+                       FETCH s2, s0                              ; Get value stored in memory.
+                       LOAD s3, putchar_decode'upper             ; Upper bound of table.
+                       LOAD s4, putchar_decode'lower             ; Lower bound of table.
+                       ADD s4, s2                                ; Index the table.
+                       ADDCY s3, 00                              ; Add carry from right half.
+                       CALL@ (s3, s4)                            ; Return hex decode value in sF.
                        ; Writes seven segment pattern to display.
-                       OUTPUT s0, (s1)
+                       OUTPUT sF, (s1)
+                       COMPARE s0, 03
+                       ; Keep repeating until all 4 stored values are displayed.
+                       ADD s0, 01
+                       SL0 s1
+                       JUMP NZ, display_loop
                        RETURN
                        ;
                        ;
