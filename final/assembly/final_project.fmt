@@ -25,79 +25,7 @@
                        ;
                        ;
                        ;
-                       ; Display stored values.
-                       CALL display_stored_values
-                       JUMP main
-                       ;
-                       ;
-                       ;
-                       ;
-                       ;
-                       ;
-                       ;
-                       ;
-                       ;
-                       ; Function display_stored_values
-                       ;
-                       ; Displays four stored values on segments.
-                       ;
-                       ;
-                       CONSTANT digit_max, 08
-                       CONSTANT delay_multiplier, FF
-                       ;
-                       ;
-display_stored_values: 
-                       LOAD s1, 01                               ; Chooses which digit to display.
-                       LOAD s2, 00                               ; Register for counting.
-                       LOAD s3, 00                               ; Memory address of value to display.
-           delay_loop: 
-                       ; Set up registers s0 and s1 for putchar call.
-                       FETCH s0, (s3)
-                       CALL putchar
-                       COMPARE s1, digit_max
-                       SL0 s1
-                       ADD s3, 01
-                       JUMP NZ, delay_loop
-                       ; Increment loop count and reset digit to display.
-                       LOAD s1, 01
-                       LOAD s3, 00
-                       ADD s2, 01
-                       COMPARE s2, delay_multiplier
-                       JUMP NZ, delay_loop
-                       RETURN 
-                       ; Function putchar
-                       ;
-                       ;     - NOTE: Only handles characters 0-F and "C", "E", and "L".
-                       ;
-                       ;     - Input:
-                       ;         - s0: Character to print - is destroyed after function.
-                       ;         - s1: Display to print on.
-                       ;
-                       ;     - Uses s0 + s1 for input and s2 + s3 for table indexing.
-                       ;
-                       ;
-              putchar: 
-                       ; Determine if input is a number or a letter (see NOTE for supported characters).
-                       COMPARE s0, 15                            ; If input is greater than 15, then it is a character.
-                       JUMP C, is_number                         ; Jump to is_number label if input less than 15.
-                       ;
-                       ; Basically a switch statement to decode ASCII character - all supported characters are here.
-                       ;
-              C_check: 
-                       COMPARE s0, "C"                           ; Compare to C.
-                       JUMP NZ, E_check                          ; If it is not C, check for E.
-                       LOAD s0, 0C                               ; Set index for C in table.
-                       JUMP is_number                            ; Continue to is_number to index table.
-              E_check: 
-                       COMPARE s0, "E"
-                       JUMP NZ, L_check
-                       LOAD s0, 0E
-                       JUMP is_number
-              L_check: 
-                       LOAD s0, 10
-                       ;
-                       ;
-            is_number: 
+       display_values:
                        LOAD s2, putchar_decode'upper             ; Upper bound of table.
                        LOAD s3, putchar_decode'lower             ; Lower bound of table.
                        ADD s3, s0                                ; Index the table.
@@ -105,7 +33,6 @@ display_stored_values:
                        CALL@ (s2, s3)                            ; Return hex value in s0.
                        ;
                        ; Writes seven segment pattern to display.
-                       ;
                        OUTPUT s0, (s1)
                        RETURN 
                        ; Function putchar_decode
@@ -118,6 +45,13 @@ display_stored_values:
        putchar_decode: 
                        ;
                        LOAD&RETURN s0, putchar_character_decode#
+                       JUMP main
+                       ;
+                       ;
+                       ;
+                       ;
+                       ;
+                       ;
                        ;
                        ; Interrupt service routine.
                        ;
