@@ -98,27 +98,63 @@ begin
                  IN_PORT        => in_port);
    
     
-    -----------------------------
-    -- Led output port enable. --
-    -----------------------------
-    output_port_enable <=(port_id(3) or port_id(2) or port_id(1) or port_id(0));
-    
-    
-    ----------------------
-    -- Led output port. --
-    ----------------------
-    led_output_port: entity work.output_port
+    --------------------------
+    -- Digit 1 output port. --
+    --------------------------
+    digit_1: entity work.output_port
 
-        generic  map(N => OUT_WIDTH)
+        generic  map(N => 7)
     
-        port     map(input((OUT_WIDTH - 1) downto 7)                => port_id(3 downto 0),
-                     input(6 downto 0)                              => out_port(6 downto 0),
-                     output((OUT_WIDTH - 1) downto (OUT_WIDTH - 4)) => display_select(3 downto 0),
-                     output((OUT_WIDTH - 5) downto 0)               => display_value,
-                     enable                                         => output_port_enable,
-                     strobe                                         => write_strobe,
-                     clk                                            => clk);
+        port     map(input   => out_port(6 downto 0),
+                     output  => display_value,
+                     enable  => port_id(0),
+                     strobe  => write_strobe,
+                     clk     => clk);
+        
+        
+    --------------------------
+    -- Digit 2 output port. --
+    --------------------------
+    digit_2: entity work.output_port
 
+        generic  map(N => 7)
+    
+        port     map(input   => out_port(6 downto 0),
+                     output  => display_value,
+                     enable  => port_id(1),
+                     strobe  => write_strobe,
+                     clk     => clk);
+        
+        
+    --------------------------
+    -- Digit 3 output port. --
+    --------------------------
+    digit_3: entity work.output_port
+
+        generic  map(N => 7)
+    
+        port     map(input   => out_port(6 downto 0),
+                     output  => display_value,
+                     enable  => port_id(2),
+                     strobe  => write_strobe,
+                     clk     => clk);
+        
+        
+    --------------------------
+    -- Digit 4 output port. --
+    --------------------------
+    digit_4: entity work.output_port
+
+        generic  map(N => 7)
+    
+        port     map(input   => out_port(6 downto 0),
+                     output  => display_value,
+                     enable  => port_id(3),
+                     strobe  => write_strobe,
+                     clk     => clk);
+
+        
     display_select(7 downto 4) <= (others => '1');
+    display_select(3 downto 0) <= port_id(3 downto 0);
 
  end behavioral;
