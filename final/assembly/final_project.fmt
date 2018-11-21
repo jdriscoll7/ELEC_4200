@@ -33,29 +33,29 @@
                        ;
                        ;
        display_values:
-                       LOAD s0, 00
-                       LOAD s1, 01
+                       LOAD s0, 00                               ; Begin with first stored value.
+                       LOAD s1, 01                               ; Write first value to first display.
          display_loop:
                        FETCH s2, (s0)                            ; Get value stored in memory.
-                       LOAD s3, putchar_decode'upper             ; Upper bound of table.
-                       LOAD s4, putchar_decode'lower             ; Lower bound of table.
+                       LOAD s3, segment_decode'upper             ; Upper bound of table.
+                       LOAD s4, segment_decode'lower             ; Lower bound of table.
                        ADD s4, s2                                ; Index the table.
                        ADDCY s3, 00                              ; Add carry from right half.
                        CALL@ (s3, s4)                            ; Return hex decode value in sF.
-                       ; Writes seven segment pattern to display.
-                       OUTPUT sF, (s1)
-                       COMPARE s0, 03
+                       OUTPUT sF, (s1)                           ; Writes seven segment pattern to display.
+                       ;
                        ; Keep repeating until all 4 stored values are displayed.
-                       ADD s0, 01
-                       SL0 s1
-                       JUMP NZ, display_loop
+                       ADD s0, 01                                ; Set s0 to next stored value (index).
+                       SL0 s1                                    ; Update which display to write to.
+                       COMPARE s0, 04                            ; If s0 is 4, then done.
+                       JUMP NZ, display_loop                     ; Loop if not done.
                        RETURN
                        ;
                        ;
                        ;
                        ;
                        ;
-                       ; Function putchar_decode
+                       ; Function segment_decode
                        ;
                        ;    - Holds a table of seven-segment display values.
                        ;
@@ -63,10 +63,10 @@
                        ;
                        ;    - Returns value in register sF.
                        ;
-                       TABLE putchar_character_decode#, [40,79,24,30,19,12,02,78,00,10,08,03,44,21,06,0E,38]
-       putchar_decode: 
+                       TABLE segment_character_decode#, [40,79,24,30,19,12,02,78,00,10,08,03,44,21,06,0E,38]
+       segment_decode: 
                        ;
-                       LOAD&RETURN sF, putchar_character_decode#
+                       LOAD&RETURN sF, segment_character_decode#
                        ;
                        ;
                        ;
