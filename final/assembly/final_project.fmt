@@ -2,12 +2,6 @@
                        ;
                        ; [X] [X] [X] [X] [digit_3] [digit_2] [digit_1] [digit_0]
                        ;
-                       ; Digit definitions - one-hot for activating digits of display.
-                       CONSTANT digit_3, 08
-                       CONSTANT digit_2, 04
-                       CONSTANT digit_1, 02
-                       CONSTANT digit_0, 01
-                       ;
                        ;
                        ; Enable interrupts for the program to work.
                        ENABLE INTERRUPT
