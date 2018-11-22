@@ -73,7 +73,6 @@
                        ;
                        ;
                        ;
-                       ;
                        ; Interrupt service routine.
                        ;
                        ;     - Used to signal to the processor that
