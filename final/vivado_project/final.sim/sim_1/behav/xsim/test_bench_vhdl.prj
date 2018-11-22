@@ -1,0 +1,15 @@
+# compile vhdl design source files
+vhdl xil_defaultlib  \
+"../../../../../vhdl/spi/debouncer.vhd" \
+"../../../../../vhdl/spi/digital_oneshot.vhd" \
+"../../../../../assembly/final_project.vhd" \
+"../../../../../assembly/kcpsm6.vhd" \
+"../../../../../vhdl/entities/port_entities.vhd" \
+"../../../../../vhdl/spi/spi_components.vhd" \
+"../../../../../vhdl/spi/spi_controller.vhd" \
+"../../../../../vhdl/spi/spi_receiver.vhd" \
+"../../../../../vhdl/top_level/top_level.vhd" \
+"../../../../../test/test_bench.vhd" \
+
+# Do not sort compile order
+nosort

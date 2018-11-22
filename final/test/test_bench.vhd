@@ -28,7 +28,7 @@ begin
                  display_select => display_select,
                  display_value  => display_value);
                  
-    CLK <= not CLK after 500 ps;
+    CLK <= not CLK after 10 ns;
                  
     process
     
@@ -46,9 +46,9 @@ begin
                 
                 wait for 10 ns;
                 
-                send_bit <= '0', '1' after 5 ns;
+                send_bit <= '0', '1' after 1 us;
                 
-                wait for 10 ns;
+                wait for 2 us;
                 
             end loop;
         

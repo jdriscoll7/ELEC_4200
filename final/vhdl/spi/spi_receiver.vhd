@@ -14,7 +14,7 @@ entity spi_receiver is
           PORT_ID       : in  std_logic_vector(7 downto 0);
           READ_STROBE   : in  std_logic;
           CLK           : in  std_logic;
-          INTERRUPT     : out std_logic;
+          INTERRUPT     : out std_logic := '0';
           IN_PORT       : out std_logic_vector(7 downto 0));
 end spi_receiver;
 

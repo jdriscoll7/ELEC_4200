@@ -7,7 +7,7 @@ entity debouncer is
 	
     -- Generic to set size of counter. If P=period to stable switch, and f=clock frequency
 	-- then N = ceil(log2(P*f-2)).
-    generic (N : integer := 8);
+    generic (N : integer := 1);
 	
 	port (PB      : in  STD_LOGIC;		        -- Signal to debounce.
           CLK     : in  STD_LOGIC;		        -- Clock.

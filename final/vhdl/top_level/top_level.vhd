@@ -34,13 +34,9 @@ architecture behavioral of final_project_top_level is
     signal kcpsm6_reset    : std_logic;
 
     -- Special enable signal for output port (lower four bits of port_id OR'd together).
-    signal output_port_enable : std_logic := '0';
-    
-    -- Constants pertaining to system.
-    constant OUT_WIDTH : integer := 11;
+    signal output_port_out : std_logic_vector(10 downto 0) := (others => '0');
     
 
-    
 begin
 
     ---------------------
@@ -98,63 +94,26 @@ begin
                  IN_PORT        => in_port);
    
     
-    --------------------------
-    -- Digit 1 output port. --
-    --------------------------
-    digit_1: entity work.output_port
+    ---------------------------------
+    -- Output port to drive LED's. --
+    ---------------------------------
+    segment_output_port: entity work.output_port
 
-        generic  map(N => 7)
+        generic  map(N => 11)
     
-        port     map(input   => out_port(6 downto 0),
-                     output  => display_value,
-                     enable  => port_id(0),
-                     strobe  => write_strobe,
-                     clk     => clk);
+        port     map(input(10 downto 7) => port_id(3 downto 0), 
+                     input(6 downto 0)  => out_port(6 downto 0),
+                     output             => output_port_out,
+                     enable             => '1',
+                     strobe             => write_strobe,
+                     clk                => clk);
         
         
-    --------------------------
-    -- Digit 2 output port. --
-    --------------------------
-    digit_2: entity work.output_port
-
-        generic  map(N => 7)
-    
-        port     map(input   => out_port(6 downto 0),
-                     output  => display_value,
-                     enable  => port_id(1),
-                     strobe  => write_strobe,
-                     clk     => clk);
-        
-        
-    --------------------------
-    -- Digit 3 output port. --
-    --------------------------
-    digit_3: entity work.output_port
-
-        generic  map(N => 7)
-    
-        port     map(input   => out_port(6 downto 0),
-                     output  => display_value,
-                     enable  => port_id(2),
-                     strobe  => write_strobe,
-                     clk     => clk);
-        
-        
-    --------------------------
-    -- Digit 4 output port. --
-    --------------------------
-    digit_4: entity work.output_port
-
-        generic  map(N => 7)
-    
-        port     map(input   => out_port(6 downto 0),
-                     output  => display_value,
-                     enable  => port_id(3),
-                     strobe  => write_strobe,
-                     clk     => clk);
-
-        
+    -- Set the seven segment digit select.
     display_select(7 downto 4) <= (others => '1');
-    display_select(3 downto 0) <= port_id(3 downto 0);
+    display_select(3 downto 0) <= output_port_out(10 downto 7);
+    
+    -- Set the seven segment code.
+    display_value <= output_port_out(6 downto 0);
 
  end behavioral;

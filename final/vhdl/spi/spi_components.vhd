@@ -13,7 +13,7 @@ entity d_flip_flop is
          CLR : in  std_logic;
          CLK : in  std_logic;
          EN  : in  std_logic;
-         Q   : out std_logic);
+         Q   : out std_logic := '0');
 end d_flip_flop;
 
 

@@ -1,118 +1,118 @@
-                       ; Format for seven-segment display definitions.
-                       ;
-                       ; [X] [X] [X] [X] [digit_3] [digit_2] [digit_1] [digit_0]
-                       ;
-                       ;
-                       ; Enable interrupts for the program to work.
-                       ENABLE INTERRUPT
-                       ;
-                       ;
-                 main: 
-                       ; Scroll ELEC 4200 character sequence.
-                       ;
-                       ;
-                       ;
-                       ;
-                       CALL display_values
-                       JUMP main
-                       ;
-                       ;
-                       ;
-                       ;
-                       ;
-                       ; Function display_values
-                       ;
-                       ;     - Outputs each of the four stored hex values on LED's.
-                       ;     - Register usage:
-                       ;         - s0: stores which of stored values to display (0-3)
-                       ;         - s1: stores which port to write the digit to
-                       ;         - s2: stores the value stored in memory (changed by SPI)
-                       ;         - s3 and s4: index the segment decode table
-                       ;         - sF: holds seven segment display value
-                       ;
-                       ;
-                       ;
-       display_values:
-                       LOAD s0, 00                               ; Begin with first stored value.
-                       LOAD s1, 01                               ; Write first value to first display.
-         display_loop:
-                       FETCH s2, (s0)                            ; Get value stored in memory.
-                       LOAD s3, segment_decode'upper             ; Upper bound of table.
-                       LOAD s4, segment_decode'lower             ; Lower bound of table.
-                       ADD s4, s2                                ; Index the table.
-                       ADDCY s3, 00                              ; Add carry from right half.
-                       CALL@ (s3, s4)                            ; Return hex decode value in sF.
-                       OUTPUT sF, (s1)                           ; Writes seven segment pattern to display.
-                       ;
-                       ; Keep repeating until all 4 stored values are displayed.
-                       ADD s0, 01                                ; Set s0 to next stored value (index).
-                       SL0 s1                                    ; Update which display to write to.
-                       COMPARE s0, 04                            ; If s0 is 4, then done.
-                       JUMP NZ, display_loop                     ; Loop if not done.
-                       RETURN
-                       ;
-                       ;
-                       ;
-                       ;
-                       ;
-                       ; Function segment_decode
-                       ;
-                       ;    - Holds a table of seven-segment display values.
-                       ;
-                       ;    - Access elements in table with CALL@ (decode_table'upper, decode_table'lower + index).
-                       ;
-                       ;    - Returns value in register sF.
-                       ;
-                       TABLE segment_character_decode#, [40,79,24,30,19,12,02,78,00,10,08,03,44,21,06,0E,38]
-       segment_decode: 
-                       ;
-                       LOAD&RETURN sF, segment_character_decode#
-                       ;
-                       ;
-                       ;
-                       ;
-                       ;
-                       ;
-                       ; Interrupt service routine.
-                       ;
-                       ;     - Used to signal to the processor that
-                       ;       an SPI data transfer has taken place and
-                       ;       that data should be captured.
-                       ;
-                       ;     - Uses s0 and s1 for all operations.
-                       ;         - s0: Used for data input.
-                       ;         - s1: Holds masked address data.
-                       ;         - s2: Holds masked value data.
-                       ;
-                       ;
-                       ADDRESS F80                               ; Address of interrupt vector (in specifications).
-                       REGBANK B                                 ; Use different register bank for interrupt.
-                       ;
-                       ;
-                       ; Constants needed for ISR (input port number and data masks).
-                       CONSTANT input_port, 00
-                       CONSTANT digit_address_mask, 30
-                       CONSTANT digit_value_mask, 0F
-                       ;
-                       ;
-                       ;
-                  isr: 
-                       ; Setup registers s1 and s2 and load input data into s0.
-                       INPUT s0, input_port                      ; Place input data into s0.
-                       LOAD s1, digit_address_mask               ; Load register s1 with address mask.
-                       LOAD s2, digit_value_mask                 ; Load register s2 with value mask.
-                       ;
-                       ; Actually perform the masking.
-                       AND s1, s0                                ; Extract address bits of input.
-                       AND s2, s0                                ; Extract value bits of input.
-                       ;
-                       ; Shift address bits of input so they are in least significant bits of register.
-                       SR0 s1
-                       SR0 s1
-                       SR0 s1
-                       SR0 s1
-                       ;
-                       ; Update stored value determined by address bits.
-                       STORE s2, (s1)
-                       REGBANK A                                 ; Change register bank back to user bank.
-                       RETURNI ENABLE                            ; Return from interrupt.
+                ; Format for seven-segment display definitions.
+                ;
+                ; [X] [X] [X] [X] [digit_3] [digit_2] [digit_1] [digit_0]
+                ;
+                ;
+                ; Enable interrupts for the program to work.
+                ENABLE INTERRUPT
+                ;
+                ;
+          main: 
+                ; Scroll ELEC 4200 character sequence.
+                ;
+                ;
+                ;
+                ;
+                CALL display_values
+                JUMP main
+                ;
+                ;
+                ;
+                ;
+                ;
+                ; Function display_values
+                ;
+                ;     - Outputs each of the four stored hex values on LED's.
+                ;     - Register usage:
+                ;         - s0: stores which of stored values to display (0-3)
+                ;         - s1: stores which port to write the digit to
+                ;         - s2: stores the value stored in memory (changed by SPI)
+                ;         - s3 and s4: index the segment decode table
+                ;         - sF: holds seven segment display value
+                ;
+                ;
+                ;
+display_values: 
+                LOAD s0, 00                               ; Begin with first stored value.
+                LOAD s1, 01                               ; Write first value to first display.
+  display_loop: 
+                FETCH s2, (s0)                            ; Get value stored in memory.
+                LOAD s3, segment_decode'upper             ; Upper bound of table.
+                LOAD s4, segment_decode'lower             ; Lower bound of table.
+                ADD s4, s2                                ; Index the table.
+                ADDCY s3, 00                              ; Add carry from right half.
+                CALL@ (s3, s4)                            ; Return hex decode value in sF.
+                OUTPUT sF, (s1)                           ; Writes seven segment pattern to display.
+                ;
+                ; Keep repeating until all 4 stored values are displayed.
+                ADD s0, 01                                ; Set s0 to next stored value (index).
+                SL0 s1                                    ; Update which display to write to.
+                COMPARE s0, 04                            ; If s0 is 4, then done.
+                JUMP NZ, display_loop                     ; Loop if not done.
+                RETURN 
+                ;
+                ;
+                ;
+                ;
+                ;
+                ; Function segment_decode
+                ;
+                ;    - Holds a table of seven-segment display values.
+                ;
+                ;    - Access elements in table with CALL@ (decode_table'upper, decode_table'lower + index).
+                ;
+                ;    - Returns value in register sF.
+                ;
+                TABLE segment_character_decode#, [40,79,24,30,19,12,02,78,00,10,08,03,44,21,06,0E,38]
+segment_decode: 
+                ;
+                LOAD&RETURN sF, segment_character_decode#
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ; Interrupt service routine.
+                ;
+                ;     - Used to signal to the processor that
+                ;       an SPI data transfer has taken place and
+                ;       that data should be captured.
+                ;
+                ;     - Uses s0 and s1 for all operations.
+                ;         - s0: Used for data input.
+                ;         - s1: Holds masked address data.
+                ;         - s2: Holds masked value data.
+                ;
+                ;
+                ADDRESS 3FF                               ; Address of interrupt vector (in specifications).
+                REGBANK B                                 ; Use different register bank for interrupt.
+                ;
+                ;
+                ; Constants needed for ISR (input port number and data masks).
+                CONSTANT input_port, 00
+                CONSTANT digit_address_mask, 30
+                CONSTANT digit_value_mask, 0F
+                ;
+                ;
+                ;
+           isr: 
+                ; Setup registers s1 and s2 and load input data into s0.
+                INPUT s0, input_port                      ; Place input data into s0.
+                LOAD s1, digit_address_mask               ; Load register s1 with address mask.
+                LOAD s2, digit_value_mask                 ; Load register s2 with value mask.
+                ;
+                ; Actually perform the masking.
+                AND s1, s0                                ; Extract address bits of input.
+                AND s2, s0                                ; Extract value bits of input.
+                ;
+                ; Shift address bits of input so they are in least significant bits of register.
+                SR0 s1
+                SR0 s1
+                SR0 s1
+                SR0 s1
+                ;
+                ; Update stored value determined by address bits.
+                STORE s2, (s1)
+                REGBANK A                                 ; Change register bank back to user bank.
+                RETURNI ENABLE                            ; Return from interrupt.

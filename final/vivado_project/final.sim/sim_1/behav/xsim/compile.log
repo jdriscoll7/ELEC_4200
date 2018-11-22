@@ -1,0 +1,6 @@
+INFO: [VRFC 10-163] Analyzing VHDL file "D:/Auburn/School/Courses/ELEC4200/github/ELEC_4200/final/assembly/final_project.vhd" into library xil_defaultlib
+INFO: [VRFC 10-307] analyzing entity final_project
+INFO: [VRFC 10-163] Analyzing VHDL file "D:/Auburn/School/Courses/ELEC4200/github/ELEC_4200/final/vhdl/top_level/top_level.vhd" into library xil_defaultlib
+INFO: [VRFC 10-307] analyzing entity final_project_top_level
+INFO: [VRFC 10-163] Analyzing VHDL file "D:/Auburn/School/Courses/ELEC4200/github/ELEC_4200/final/test/test_bench.vhd" into library xil_defaultlib
+INFO: [VRFC 10-307] analyzing entity test_bench

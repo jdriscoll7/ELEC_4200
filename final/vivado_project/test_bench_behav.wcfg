@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="test_bench_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="test_bench" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="151748873181fs"></ZoomStartTime>
+      <ZoomEndTime time="192850636953fs"></ZoomEndTime>
+      <Cursor1Time time="511323948000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="175"></NameColumnWidth>
+      <ValueColumnWidth column_width="126"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="9" />
+   <wvobject fp_name="/test_bench/data_bit" type="logic">
+      <obj_property name="ElementShortName">data_bit</obj_property>
+      <obj_property name="ObjectShortName">data_bit</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_bench/send_bit" type="logic">
+      <obj_property name="ElementShortName">send_bit</obj_property>
+      <obj_property name="ObjectShortName">send_bit</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_bench/display_select" type="array">
+      <obj_property name="ElementShortName">display_select[7:0]</obj_property>
+      <obj_property name="ObjectShortName">display_select[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_bench/display_value" type="array">
+      <obj_property name="ElementShortName">display_value[6:0]</obj_property>
+      <obj_property name="ObjectShortName">display_value[6:0]</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_bench/UUT/spi_interface/INTERRUPT" type="logic">
+      <obj_property name="ElementShortName">INTERRUPT</obj_property>
+      <obj_property name="ObjectShortName">INTERRUPT</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_bench/UUT/processor/write_strobe" type="logic">
+      <obj_property name="ElementShortName">write_strobe</obj_property>
+      <obj_property name="ObjectShortName">write_strobe</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_bench/UUT/processor/port_id" type="array">
+      <obj_property name="ElementShortName">port_id[7:0]</obj_property>
+      <obj_property name="ObjectShortName">port_id[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_bench/UUT/segment_output_port/output" type="array">
+      <obj_property name="ElementShortName">output[10:0]</obj_property>
+      <obj_property name="ObjectShortName">output[10:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_bench/UUT/processor/in_port" type="array">
+      <obj_property name="ElementShortName">in_port[7:0]</obj_property>
+      <obj_property name="ObjectShortName">in_port[7:0]</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+   </wvobject>
+</wave_config>
