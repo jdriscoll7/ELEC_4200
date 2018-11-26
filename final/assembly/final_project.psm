@@ -122,101 +122,101 @@
                        JUMP Z, seq8
                 seq0:
                        ; Print "E"
-                       OUTPUTK 06, 01
+                       OUTPUTK 06, 1
                        CALL short_delay
-                       OUTPUTK FF, 02
+                       OUTPUTK FF, 2
                        CALL short_delay
-                       OUTPUTK FF, 04
+                       OUTPUTK FF, 4
                        CALL short_delay
-                       OUTPUTK FF, 08
+                       OUTPUTK FF, 8
                        CALL short_delay
                        JUMP next_loop
                 seq1:
                        ; Print "EL"
-                       OUTPUTK 38, 01
+                       OUTPUTK 38, 1
                        CALL short_delay
-                       OUTPUTK 06, 02
+                       OUTPUTK 06, 2
                        CALL short_delay
-                       OUTPUTK FF, 04
+                       OUTPUTK FF, 4
                        CALL short_delay
-                       OUTPUTK FF, 08
+                       OUTPUTK FF, 8
                        CALL short_delay
                        JUMP next_loop
                 seq2:
                        ; Print "ELE"
-                       OUTPUTK 06, 01
+                       OUTPUTK 06, 1
                        CALL short_delay
-                       OUTPUTK 38, 02
+                       OUTPUTK 38, 2
                        CALL short_delay
-                       OUTPUTK 06, 04
+                       OUTPUTK 06, 4
                        CALL short_delay
-                       OUTPUTK FF, 08
+                       OUTPUTK FF, 8
                        CALL short_delay
                        JUMP next_loop
                 seq3:
                        ; Print "ELEC"
-                       OUTPUTK 44, 01
+                       OUTPUTK 44, 1
                        CALL short_delay
-                       OUTPUTK 06, 02
+                       OUTPUTK 06, 2
                        CALL short_delay
-                       OUTPUTK 38, 04
+                       OUTPUTK 38, 4
                        CALL short_delay
-                       OUTPUTK 06, 08
+                       OUTPUTK 06, 8
                        CALL short_delay
                        JUMP next_loop
                 seq4:
                        ; Print "LEC "
-                       OUTPUTK FF, 01
+                       OUTPUTK FF, 1
                        CALL short_delay
-                       OUTPUTK 44, 02
+                       OUTPUTK 44, 2
                        CALL short_delay
-                       OUTPUTK 06, 04
+                       OUTPUTK 06, 4
                        CALL short_delay
-                       OUTPUTK 38, 08
+                       OUTPUTK 38, 8
                        CALL short_delay
                        JUMP next_loop
                 seq5:
                        ; Print "EC 4"
-                       OUTPUTK 19, 01
+                       OUTPUTK 19, 1
                        CALL short_delay
-                       OUTPUTK FF, 02
+                       OUTPUTK FF, 2
                        CALL short_delay
-                       OUTPUTK 44, 04
+                       OUTPUTK 44, 4
                        CALL short_delay
-                       OUTPUTK 06, 08
+                       OUTPUTK 06, 8
                        CALL short_delay
                        JUMP next_loop
                 seq6:
                        ; Print "C 42"
-                       OUTPUTK 24, 01
+                       OUTPUTK 24, 1
                        CALL short_delay
-                       OUTPUTK 19, 02
+                       OUTPUTK 19, 2
                        CALL short_delay
-                       OUTPUTK FF, 04
+                       OUTPUTK FF, 4
                        CALL short_delay
-                       OUTPUTK 44, 08
+                       OUTPUTK 44, 8
                        CALL short_delay
                        JUMP next_loop
                 seq7:
                        ; Print " 420"
-                       OUTPUTK 40, 01
+                       OUTPUTK 40, 1
                        CALL short_delay
-                       OUTPUTK 24, 02
+                       OUTPUTK 24, 2
                        CALL short_delay
-                       OUTPUTK 19, 04
+                       OUTPUTK 19, 4
                        CALL short_delay
-                       OUTPUTK FF, 08
+                       OUTPUTK FF, 8
                        CALL short_delay
                        JUMP next_loop
                 seq8:
                        ; Print "4200"
-                       OUTPUTK 40, 01
+                       OUTPUTK 40, 1
                        CALL short_delay
-                       OUTPUTK 40, 02
+                       OUTPUTK 40, 2
                        CALL short_delay
-                       OUTPUTK 24, 04
+                       OUTPUTK 24, 4
                        CALL short_delay
-                       OUTPUTK 19, 08
+                       OUTPUTK 19, 8
                        CALL short_delay
                        
                        
