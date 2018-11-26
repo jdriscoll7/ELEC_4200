@@ -16,7 +16,7 @@ architecture behavioral of spi_controller is
     constant max_count : integer := 6;
 
     -- Keeps track of the count to know when a 6-bit data transfer is completed.
-    signal current_count : integer := 0;
+    signal current_count : integer range 0 to 6 := 0;
 
     -- Stores the EN value that needs to be written on next CLK pulse (not SCK pulse).
     signal next_EN : std_logic := '0';
