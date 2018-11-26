@@ -87,29 +87,120 @@
                        LOAD s0, FF
                        LOAD s1, FF
                        LOAD s2, 0D
+                       LOAD s3, 00
+  super_display_loop:
+                       LOAD s2, 0D
     outer_delay_loop:
                        SUB s2, 01
+                       LOAD s1, FF
+                       LOAD s0, FF
    middle_delay_loop:
                        SUB s1, 01
+                       LOAD s0, FF
     inner_delay_loop:
                        SUB s0, 01
                        ;
                        ; Do the case statement here.
                        ;
+                       COMPARE s3, 00
+                       JUMP Z, seq0
+                       COMPARE s3, 01
+                       JUMP Z, seq1
+                       COMPARE s3, 02
+                       JUMP Z, seq2
+                       COMPARE s3, 03
+                       JUMP Z, seq3
+                       COMPARE s3, 04
+                       JUMP Z, seq4
+                       COMPARE s3, 05
+                       JUMP Z, seq5
+                       COMPARE s3, 06
+                       JUMP Z, seq6
+                       COMPARE s3, 07
+                       JUMP Z, seq7
+                       COMPARE s3, 08
+                       JUMP Z, seq8
+                seq0:
+                       ; Print "E"
+                       OUTPUT 06, 01
+                       JUMP next_loop
+                seq1:
+                       ; Print "EL"
+                       OUTPUT 38, 01
+                       OUTPUT 06, 02
+                       JUMP next_loop
+                seq2:
+                       ; Print "ELE"
+                       OUTPUT 06, 01
+                       OUTPUT 38, 02
+                       OUTPUT 06, 04
+                       JUMP next_loop
+                seq3:
+                       ; Print "ELEC"
+                       OUTPUT 44, 01
+                       OUTPUT 06, 02
+                       OUTPUT 38, 04
+                       OUTPUT 06, 08
+                       JUMP next_loop
+                seq4:
+                       ; Print "LEC "
+                       OUTPUT FF, 01
+                       OUTPUT 44, 02
+                       OUTPUT 06, 04
+                       OUTPUT 38, 08
+                       JUMP next_loop
+                seq5:
+                       ; Print "EC 4"
+                       OUTPUT 19, 01
+                       OUTPUT FF, 02
+                       OUTPUT 44, 04
+                       OUTPUT 06, 08
+                       JUMP next_loop
+                seq6:
+                       ; Print "C 42"
+                       OUTPUT 24, 01
+                       OUTPUT 19, 02
+                       OUTPUT FF, 04
+                       OUTPUT 44, 08
+                       JUMP next_loop
+                seq7:
+                       ; Print " 420"
+                       OUTPUT 40, 01
+                       OUTPUT 24, 02
+                       OUTPUT 19, 04
+                       OUTPUT FF, 08
+                       JUMP next_loop
+                seq8:
+                       ; Print "4200"
+                       OUTPUT 40, 01
+                       OUTPUT 40, 02
+                       OUTPUT 24, 04
+                       OUTPUT 19, 08
+                       
+                       
                        
                
-     next_delay_loop:
+          next_loop:
                        ; Make delay decision.
+                       ;
+                       ; Inner delay loop
                        COMPARE s0, 00
                        JUMP NZ, inner_delay_loop
+                       ;
+                       ; Middle delay loop
                        COMPARE s1, 00
                        JUMP NZ, middle_delay_loop
+                       ;
+                       ; Outer delay loop
                        COMPARE s2, 00
-                       JUMP NZ outer_delay_loop
+                       JUMP NZ, outer_delay_loop
+                       ;
+                       ; Check if all substrings of "ELEC 4200" have been displayed.
+                       COMPARE s3, 09
+                       ADD s3, 01
+                       JUMP NZ, super_display_loop
+                       ;
                        RETURN
-   
-   
-   
                        ;
                        ;
                        ;
