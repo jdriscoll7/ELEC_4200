@@ -73,6 +73,49 @@
                        ;
                        ;
                        ;
+                       ; Function super_display
+                       ;
+                       ;     - Displays ELEC 4200 on segment displays.
+                       ;
+                       ;     - s0, s1, and s2 are used for manual delay
+                       ;     - s3 is used to determine which pattern to display (substring of "ELEC 4200");
+                       ;       this will be done basically with a case statement.
+                       ;
+                       
+       super_display:
+                       ; Use s0, s1, and s2 as counters for manual delays.
+                       LOAD s0, FF
+                       LOAD s1, FF
+                       LOAD s2, 0D
+    outer_delay_loop:
+                       SUB s2, 01
+   middle_delay_loop:
+                       SUB s1, 01
+    inner_delay_loop:
+                       SUB s0, 01
+                       ;
+                       ; Do the case statement here.
+                       ;
+                       
+               
+     next_delay_loop:
+                       ; Make delay decision.
+                       COMPARE s0, 00
+                       JUMP NZ, inner_delay_loop
+                       COMPARE s1, 00
+                       JUMP NZ, middle_delay_loop
+                       COMPARE s2, 00
+                       JUMP NZ outer_delay_loop
+                       RETURN
+   
+   
+   
+                       ;
+                       ;
+                       ;
+                       ;
+                       ;
+                       ;
                        ;
                        ; Interrupt service routine.
                        ;
