@@ -21,6 +21,7 @@ architecture test of test_bench is
 
 begin
     
+    -- Based on final project interface parameters (left side of assignments).
     UUT : entity work.final_project_top_level
         port map(data_bit       => data_bit,
                  send_bit       => send_bit,
@@ -28,7 +29,7 @@ begin
                  display_select => display_select,
                  display_value  => display_value);
                  
-    CLK <= not CLK after 10 ns;
+    CLK <= not CLK after 500 ps;
                  
     process
     
@@ -46,9 +47,9 @@ begin
                 
                 wait for 10 ns;
                 
-                send_bit <= '0', '1' after 1 us;
+                send_bit <= '0', '1' after 5 ns;
                 
-                wait for 2 us;
+                wait for 10 ns;
                 
             end loop;
         
