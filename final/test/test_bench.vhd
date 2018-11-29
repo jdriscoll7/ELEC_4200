@@ -49,11 +49,11 @@ begin
                 
                 send_bit <= '0', '1' after 5 ns;
                 
-                wait for 10 ns;
+                wait for 1 sec;
                 
             end loop;
         
-            wait for 50 us;
+            wait for 1 sec;
             
         end loop;
     

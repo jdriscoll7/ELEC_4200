@@ -105,13 +105,13 @@ begin
                      input(6 downto 0)  => out_port(6 downto 0),
                      output             => output_port_out,
                      enable             => '1',
-                     strobe             => write_strobe,
+                     strobe             => write_strobe or k_write_strobe,
                      clk                => clk);
         
         
     -- Set the seven segment digit select.
     display_select(7 downto 4) <= (others => '1');
-    display_select(3 downto 0) <= output_port_out(10 downto 7);
+    display_select(3 downto 0) <= not output_port_out(10 downto 7);
     
     -- Set the seven segment code.
     display_value <= output_port_out(6 downto 0);
